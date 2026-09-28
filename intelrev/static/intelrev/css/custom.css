@@ -1,0 +1,15 @@
+body {
+  font-family: 'Poppins', sans-serif;
+}
+
+.navbar-brand {
+  font-size: 1.4rem;
+}
+
+.card {
+  border-radius: 1rem;
+}
+
+.alert {
+  transition: opacity 0.5s ease-in-out;
+}

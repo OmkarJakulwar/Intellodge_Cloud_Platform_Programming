@@ -1,0 +1,120 @@
+{% extends 'intelrev/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold">📒 Booking Management</h2>
+    <a href="{% url 'booking_create' %}" class="btn btn-primary">+ New Booking</a>
+  </div>
+
+  <div class="card shadow-sm border-0 rounded-3">
+    <div class="card-body">
+      {% if bookings %}
+      <div class="table-responsive">
+        <table class="table table-hover align-middle text-center">
+          <thead class="table-light">
+            <tr>
+              <th>Booking Code</th>
+              <th>Guest Name</th>
+              <th>Email</th>
+              <th>Room</th>
+              <th>Amount ($)</th>
+              <th>Check-In</th>
+              <th>Check-Out</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {% for b in bookings %}
+            <tr class="{% if b.status == 'cancelled' %}table-secondary{% endif %}">
+              <td class="fw-semibold">{{ b.booking_code }}</td>
+              <td>{{ b.guest_name }}</td>
+              <td>{{ b.guest_email }}</td>
+              <td>{{ b.room_number }}</td>
+              <td>{{ b.amount }}</td>
+              <td>{{ b.check_in_date }}</td>
+              <td>{{ b.check_out_date }}</td>
+
+              <td>
+                {% if b.status == "confirmed" %}
+                  <span class="badge bg-success">Confirmed</span>
+                {% elif b.status == "cancelled" %}
+                  <span class="badge bg-secondary">Cancelled</span>
+                {% else %}
+                  <span class="badge bg-warning text-dark">{{ b.status }}</span>
+                {% endif %}
+              </td>
+
+              <td>
+                {% if b.booking_id and b.status != "cancelled" %}
+                  <button class="btn btn-sm btn-warning"
+                          data-bs-toggle="modal"
+                          data-bs-target="#cancelModal"
+                          data-booking-id="{{ b.booking_id }}">
+                    Cancel
+                  </button>
+                {% else %}
+                  <span class="text-muted">—</span>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+        <p class="text-center text-muted">No bookings found.</p>
+      {% endif %}
+    </div>
+
+<!-- Cancel Confirmation Modal -->
+<div class="modal fade" id="cancelModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">Cancel Booking</h5>
+        <button class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+        Are you sure you want to cancel this booking?
+        <br>
+        <small class="text-muted">The room will be marked as Vacant.</small>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+        <a id="confirmCancelBtn" class="btn btn-warning">Yes, Cancel</a>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const cancelModal = document.getElementById('cancelModal');
+  const confirmBtn = document.getElementById('confirmCancelBtn');
+
+  cancelModal.addEventListener('show.bs.modal', function (event) {
+    let button = event.relatedTarget;
+    let bookingId = button.getAttribute('data-booking-id');
+    confirmBtn.href = `/bookings/cancel/${bookingId}/`;
+  });
+});
+</script>
+
+<style>
+.table-hover tbody tr:hover {
+  background-color: rgba(0, 123, 255, 0.08);
+}
+.table-secondary td {
+  opacity: 0.7;
+}
+</style>
+
+{% endblock %}

@@ -1,0 +1,32 @@
+# Virtual environment
+env/
+venv/
+*.pyc
+__pycache__/
+
+# Node modules
+node_modules/
+
+# Django files we do NOT commit
+db.sqlite3
+*.log
+*.pot
+*.pyc
+__pycache__/
+
+# Byte-compiled / cached / temp files
+*.pyo
+*.pyd
+*.db
+*.sqlite3
+*.SQLite
+
+# OS / Cloud9 files
+*.DS_Store
+.c9/
+*.swp
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml

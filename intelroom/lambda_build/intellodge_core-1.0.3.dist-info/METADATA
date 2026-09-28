@@ -1,0 +1,14 @@
+Metadata-Version: 2.4
+Name: intellodge_core
+Version: 1.0.3
+Summary: Reusable core utilities for IntellLodge platform
+Author: IntellLodge Omi
+License-File: LICENSE
+Requires-Dist: boto3
+Requires-Dist: python-jose
+Requires-Dist: pytz
+Requires-Dist: django
+Dynamic: author
+Dynamic: license-file
+Dynamic: requires-dist
+Dynamic: summary

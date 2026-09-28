@@ -1,0 +1,98 @@
+{% extends 'intelrev/base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Revenue Dashboard</h2>
+    <div>
+      <a href="{% url 'home_dashboard' %}" class="btn btn-outline-secondary">Main Dashboard</a>
+    </div>
+  </div>
+
+  <!-- Summary Cards -->
+  <div class="row g-3 mb-4">
+    <div class="col-md-3">
+      <div class="card shadow-sm">
+        <div class="card-body text-center">
+          <h6>Total Revenue</h6>
+          <p class="display-6 fw-bold">${{ summary.total_revenue }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card shadow-sm">
+        <div class="card-body text-center">
+          <h6>Total Bookings</h6>
+          <p class="display-6 fw-bold">{{ summary.bookings_count }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card shadow-sm">
+        <div class="card-body text-center">
+          <h6>Active Bookings</h6>
+          <p class="display-6 fw-bold">{{ summary.active_bookings }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card shadow-sm">
+        <div class="card-body text-center">
+          <h6>Occupancy Rate</h6>
+          <p class="display-6 fw-bold">{{ summary.occupancy_rate }}%</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Charts Row -->
+  <div class="row">
+    <div class="col-md-8 mb-4">
+      <div class="card p-3 shadow-sm">
+        <h6>Monthly Revenue ({{ selected_year|default:"This Year" }})</h6>
+        <canvas id="monthlyChart" height="120"></canvas>
+      </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+      <div class="card p-3 shadow-sm">
+        <h6>Yearly Revenue (last {{ yearly|length }})</h6>
+        <canvas id="yearlyChart" height="120"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Pass data to JS -->
+{{ monthly|json_script:"monthly-data" }}
+{{ yearly|json_script:"yearly-data" }}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const monthly = JSON.parse(document.getElementById("monthly-data").textContent);
+const yearly = JSON.parse(document.getElementById("yearly-data").textContent);
+
+const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+// Monthly Revenue Bar Chart
+new Chart(document.getElementById('monthlyChart').getContext('2d'), {
+    type: 'bar',
+    data: {
+        labels: months,
+        datasets: [{ label: 'Revenue', data: monthly, backgroundColor: '#0d6efd' }]
+    },
+    options: { scales: { y: { beginAtZero: true } } }
+});
+
+// Yearly Revenue Line Chart
+const labels = yearly.map(x => x[0]);
+const data = yearly.map(x => x[1]);
+new Chart(document.getElementById('yearlyChart').getContext('2d'), {
+    type: 'line',
+    data: { labels: labels, datasets: [{ label: 'Revenue', data: data, fill: true, backgroundColor: 'rgba(13,110,253,0.2)', borderColor: '#0d6efd', tension: 0.3 }] },
+    options: { scales: { y: { beginAtZero: true } } }
+});
+</script>
+{% endblock %}

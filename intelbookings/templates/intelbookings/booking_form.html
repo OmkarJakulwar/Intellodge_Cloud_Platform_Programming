@@ -1,0 +1,133 @@
+{% extends 'intelrev/base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="row justify-content-center mt-5">
+    <div class="col-md-6">
+        <div class="card shadow-sm border-0 rounded-3">
+            <div class="card-body p-4">
+                <h3 class="mb-4 text-center">Create New Booking</h3>
+
+                <form method="post" class="needs-validation" novalidate>
+                    {% csrf_token %}
+
+                    <!-- Guest Name -->
+                    <div class="mb-3">
+                        <label for="guest_name" class="form-label fw-semibold">Guest Name</label>
+                        <input type="text" name="guest_name" id="guest_name" class="form-control" 
+                               placeholder="Enter guest's full name" 
+                               value="{{ form.guest_name.value|default:'' }}" required>
+                        <div class="invalid-feedback">
+                            Guest name is required.
+                        </div>
+                        {% if form.guest_name.errors %}
+                            <div class="text-danger small mt-1">{{ form.guest_name.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Guest Email -->
+                    <div class="mb-3">
+                        <label for="guest_email" class="form-label fw-semibold">Guest Email</label>
+                        <input type="email" name="guest_email" id="guest_email" class="form-control" 
+                               placeholder="Enter guest's email" 
+                               value="{{ form.guest_email.value|default:'' }}" required>
+                        <div class="invalid-feedback">
+                            Valid email is required.
+                        </div>
+                        {% if form.guest_email.errors %}
+                            <div class="text-danger small mt-1">{{ form.guest_email.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Room Number -->
+                    <div class="mb-3">
+                        <label for="room_number" class="form-label fw-semibold">Room Number</label>
+                        <select name="room_number" id="room_number" class="form-select" required>
+                            <option value="" disabled selected>Select a room</option>
+                            {% for value, label in form.fields.room_number.choices %}
+                                <option value="{{ value }}" {% if form.room_number.value == value %}selected{% endif %}>
+                                    {{ label }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                        <div class="invalid-feedback">
+                            Please select a room.
+                        </div>
+                        {% if form.room_number.errors %}
+                            <div class="text-danger small mt-1">{{ form.room_number.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Amount -->
+                    <div class="mb-3">
+                        <label for="amount" class="form-label fw-semibold">Total Amount ($)</label>
+                        <input type="number" name="amount" id="amount" class="form-control" step="0.01"
+                               placeholder="Enter booking amount" value="{{ form.amount.value|default:'' }}" required>
+                        <div class="invalid-feedback">
+                            Amount is required.
+                        </div>
+                        {% if form.amount.errors %}
+                            <div class="text-danger small mt-1">{{ form.amount.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Check-in Date -->
+                    <div class="mb-3">
+                        <label for="check_in_date" class="form-label fw-semibold">Check-in Date</label>
+                        <input type="date" name="check_in_date" id="check_in_date" class="form-control" 
+                               value="{{ form.check_in_date.value|default:'' }}" required>
+                        <div class="invalid-feedback">
+                            Check-in date is required.
+                        </div>
+                        {% if form.check_in_date.errors %}
+                            <div class="text-danger small mt-1">{{ form.check_in_date.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Check-out Date -->
+                    <div class="mb-3">
+                        <label for="check_out_date" class="form-label fw-semibold">Check-out Date</label>
+                        <input type="date" name="check_out_date" id="check_out_date" class="form-control" 
+                               value="{{ form.check_out_date.value|default:'' }}" required>
+                        <div class="invalid-feedback">
+                            Check-out date is required.
+                        </div>
+                        {% if form.check_out_date.errors %}
+                            <div class="text-danger small mt-1">{{ form.check_out_date.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="d-flex justify-content-end mt-4">
+                        <a href="{% url 'booking_list' %}" class="btn btn-outline-secondary me-2">Cancel</a>
+                        <button type="submit" class="btn btn-primary">Create Booking</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Bootstrap form validation
+    (function () {
+      'use strict'
+      var forms = document.querySelectorAll('.needs-validation')
+      Array.prototype.slice.call(forms).forEach(function (form) {
+        form.addEventListener('submit', function (event) {
+          if (!form.checkValidity()) {
+            event.preventDefault()
+            event.stopPropagation()
+          }
+          form.classList.add('was-validated')
+        }, false)
+      })
+    })()
+</script>
+
+<style>
+.card-body input, .card-body select {
+    border-radius: 8px;
+}
+</style>
+
+{% endblock %}

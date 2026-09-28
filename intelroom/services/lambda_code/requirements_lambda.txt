@@ -1,0 +1,4 @@
+--extra-index-url https://test.pypi.org/simple/
+boto3
+intellodge_core==1.0.3 # current version 
+urllib3==1.26.20
